@@ -13,7 +13,7 @@ local L_8_ = loadstring(L_1_.HttpGet(L_1_, 'https://sirius.menu/rayfield'))()
 local L_9_ = {}
 
 local L_10_ = {
-    "YannCGStation Hitbox System 🎯",
+    "YannCG Hitbox System 🎯",
     "Advanced Limb Control ✅", 
     "YannCG Premium Loaded 💎",
     "Combat Enhanced 🚀"
@@ -22,8 +22,8 @@ local L_10_ = {
 local L_11_ = L_10_[math.random(1, #L_10_)]
 
 local L_12_ = L_8_:CreateWindow({
-    Name = "YannCGStation Hitbox",
-    Icon = ,
+    Name = "YannCG Hitbox",
+    Icon = 107904589783906,
     LoadingTitle = "YannCG Hitbox", 
     LoadingSubtitle = L_11_,
     Theme = "Default",
