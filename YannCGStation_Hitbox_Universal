@@ -35,7 +35,34 @@ local L_13_ = L_12_:CreateTab("Limbs", "scale-3d")
 local L_14_ = L_12_:CreateTab("Sense", "eye") 
 local L_15_ = L_12_:CreateTab("Target", "crosshair")
 local L_16_ = L_12_:CreateTab("Themes", "palette")
+local L_92_ = L_12_:CreateTab("Community", "users") -- 新增社区标签页
 
+-- 在社区标签页添加Discord按钮
+L_92_:CreateSection("Join Our Community")
+
+L_92_:CreateButton({
+    Name = "📢 Join Discord Server",
+    Callback = function()
+        L_1_.StarterGui:SetCore("SendNotification", {
+            Title = "YannCG Discord",
+            Text = "Discord link copied to clipboard!",
+            Duration = 5
+        })
+        
+        -- 复制Discord链接到剪贴板
+        pcall(function()
+            setclipboard("https://discord.gg/t6TMHwqt")
+        end)
+        
+        -- 在控制台显示链接
+        print("🎮 Join YannCG Discord: https://discord.gg/t6TMHwqt")
+    end,
+})
+
+L_92_:CreateLabel("Get support, updates, and more scripts!")
+L_92_:CreateLabel("Link copied to clipboard when clicked")
+
+-- 原有的功能代码保持不变...
 local function L_17_(L_18_arg1)
     local L_19_ = 'Create' .. L_18_arg1.method
     local L_20_ = L_18_arg1.tab[L_19_]
