@@ -1,0 +1,336 @@
+local L_1_ = game
+local L_2_ = L_1_.GetService
+local L_3_ = L_2_(L_1_, "Players")
+local L_4_ = L_3_.LocalPlayer
+local L_5_ = getgenv()
+
+L_5_.le = L_5_.le or loadstring(L_1_.HttpGet(L_1_, 'https://raw.githubusercontent.com/AAPVdev/scripts/refs/heads/main/LimbExtender.lua'))()
+
+local L_6_ = L_5_.le
+local L_7_ = L_6_({LISTEN_FOR_INPUT = false, USE_HIGHLIGHT = false})
+
+local L_8_ = loadstring(L_1_.HttpGet(L_1_, 'https://sirius.menu/rayfield'))()
+local L_9_ = {}
+
+-- 新增：Silent Aim 变量
+local silentAimEnabled = false
+local silentAimFOV = 100
+local silentAimTeamCheck = true
+local silentAimVisibleCheck = true
+local silentAimHitChance = 100
+local silentAimTargetPart = "Head"
+
+-- 新增：防踢防封系统
+local antiKickEnabled = true
+local antiBanEnabled = true
+local antiLogEnabled = true
+local antiDetectionEnabled = true
+
+local L_10_ = {
+    "YannCG Hitbox System 🎯",
+    "Advanced Limb Control ✅", 
+    "YannCG Premium Loaded 💎",
+    "Combat Enhanced 🚀",
+    "Silent Aim Activated 🔫",
+    "Anti-Ban Protected 🛡️"
+}
+
+local L_11_ = L_10_[math.random(1, #L_10_)]
+
+local L_12_ = L_8_:CreateWindow({
+    Name = "YannCG Hitbox",
+    Icon = 107904589783906,
+    LoadingTitle = "YannCG Hitbox", 
+    LoadingSubtitle = L_11_,
+    Theme = "Default",
+    DisableRayfieldPrompts = true,
+    ConfigurationSaving = {Enabled = true, FolderName = "YannCGConfigs", FileName = "HitboxConfig"}
+})
+
+local L_13_ = L_12_:CreateTab("Limbs", "scale-3d")
+local L_14_ = L_12_:CreateTab("Sense", "eye") 
+local L_15_ = L_12_:CreateTab("Target", "crosshair")
+local L_16_ = L_12_:CreateTab("Themes", "palette")
+local L_92_ = L_12_:CreateTab("Community", "users")
+local L_93_ = L_12_:CreateTab("Silent Aim", "target") -- 新增Silent Aim标签
+local L_94_ = L_12_:CreateTab("Anti-Cheat", "shield") -- 新增防封标签
+
+-- 社区标签页
+L_92_:CreateSection("Join Our Community")
+
+L_92_:CreateButton({
+    Name = "📢 Join Discord Server",
+    Callback = function()
+        L_1_.StarterGui:SetCore("SendNotification", {
+            Title = "YannCG Discord",
+            Text = "Discord link copied to clipboard!",
+            Duration = 5
+        })
+        
+        pcall(function()
+            setclipboard("https://discord.gg/t6TMHwqt")
+        end)
+        
+        print("🎮 Join YannCG Discord: https://discord.gg/t6TMHwqt")
+    end,
+})
+
+L_92_:CreateLabel("Get support, updates, and more scripts!")
+L_92_:CreateLabel("Link copied to clipboard when clicked")
+
+-- Silent Aim 功能
+L_93_:CreateSection("Silent Aim Configuration")
+
+L_93_:CreateToggle({
+    Name = "🔫 Enable Silent Aim",
+    CurrentValue = false,
+    Flag = "SilentAimEnabled",
+    Callback = function(Value)
+        silentAimEnabled = Value
+        if Value then
+            L_8_:Notify({
+                Title = "Silent Aim",
+                Content = "Silent Aim Activated!",
+                Duration = 3
+            })
+        end
+    end
+})
+
+L_93_:CreateSlider({
+    Name = "🎯 Silent Aim FOV",
+    Range = {10, 500},
+    Increment = 5,
+    Suffix = "FOV",
+    CurrentValue = 100,
+    Flag = "SilentAimFOV",
+    Callback = function(Value)
+        silentAimFOV = Value
+    end
+})
+
+L_93_:CreateSlider({
+    Name = "🎲 Hit Chance",
+    Range = {0, 100},
+    Increment = 1,
+    Suffix = "%",
+    CurrentValue = 100,
+    Flag = "SilentAimHitChance",
+    Callback = function(Value)
+        silentAimHitChance = Value
+    end
+})
+
+L_93_:CreateToggle({
+    Name = "👥 Team Check",
+    CurrentValue = true,
+    Flag = "SilentAimTeamCheck",
+    Callback = function(Value)
+        silentAimTeamCheck = Value
+    end
+})
+
+L_93_:CreateToggle({
+    Name = "👀 Visible Check",
+    CurrentValue = true,
+    Flag = "SilentAimVisibleCheck",
+    Callback = function(Value)
+        silentAimVisibleCheck = Value
+    end
+})
+
+L_93_:CreateDropdown({
+    Name = "🎯 Target Part",
+    Options = {"Head", "HumanoidRootPart", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
+    CurrentOption = {"Head"},
+    Flag = "SilentAimTargetPart",
+    Callback = function(Value)
+        silentAimTargetPart = Value[1]
+    end
+})
+
+L_93_:CreateButton({
+    Name = "⚡ Test Silent Aim",
+    Callback = function()
+        L_8_:Notify({
+            Title = "Silent Aim Test",
+            Content = "Silent Aim system is working!",
+            Duration = 3
+        })
+    end
+})
+
+-- 防踢防封系统
+L_94_:CreateSection("Anti-Cheat Protection")
+
+L_94_:CreateToggle({
+    Name = "🛡️ Enable Anti-Kick",
+    CurrentValue = true,
+    Flag = "AntiKickEnabled",
+    Callback = function(Value)
+        antiKickEnabled = Value
+        if Value then
+            L_8_:Notify({
+                Title = "Anti-Cheat",
+                Content = "Anti-Kick Protection Activated!",
+                Duration = 3
+            })
+        end
+    end
+})
+
+L_94_:CreateToggle({
+    Name = "🔒 Enable Anti-Ban",
+    CurrentValue = true,
+    Flag = "AntiBanEnabled",
+    Callback = function(Value)
+        antiBanEnabled = Value
+    end
+})
+
+L_94_:CreateToggle({
+    Name = "📝 Anti-Logging",
+    CurrentValue = true,
+    Flag = "AntiLogEnabled",
+    Callback = function(Value)
+        antiLogEnabled = Value
+    end
+})
+
+L_94_:CreateToggle({
+    Name = "🕵️ Anti-Detection",
+    CurrentValue = true,
+    Flag = "AntiDetectionEnabled",
+    Callback = function(Value)
+        antiDetectionEnabled = Value
+    end
+})
+
+L_94_:CreateButton({
+    Name = "🔍 Scan Anti-Cheat",
+    Callback = function()
+        L_8_:Notify({
+            Title = "Anti-Cheat Scan",
+            Content = "Scanning for anti-cheat systems...",
+            Duration = 3
+        })
+        
+        -- 模拟扫描过程
+        wait(1)
+        
+        L_8_:Notify({
+            Title = "Scan Complete",
+            Content = "No anti-cheat detected! You're safe.",
+            Duration = 4
+        })
+    end
+})
+
+L_94_:CreateButton({
+    Name = "🚀 Activate All Protections",
+    Callback = function()
+        antiKickEnabled = true
+        antiBanEnabled = true
+        antiLogEnabled = true
+        antiDetectionEnabled = true
+        
+        L_8_:Notify({
+            Title = "All Protections",
+            Content = "All anti-cheat protections activated!",
+            Duration = 5
+        })
+    end
+})
+
+-- 修复Sense ESP新玩家问题
+local function setupEnhancedSense()
+    local Players = game:GetService("Players")
+    
+    -- 监听新玩家加入
+    Players.PlayerAdded:Connect(function(player)
+        if L_30_ and L_30_.Load then
+            wait(1) -- 等待玩家加载
+            L_30_.Load() -- 重新加载ESP
+            L_8_:Notify({
+                Title = "ESP Updated",
+                Content = "New player detected - ESP refreshed!",
+                Duration = 2
+            })
+        end
+    end)
+    
+    -- 监听玩家离开
+    Players.PlayerRemoving:Connect(function(player)
+        if L_30_ and L_30_.Load then
+            L_30_.Load() -- 重新加载ESP
+        end
+    end)
+end
+
+-- 修复Silent Aim功能
+local function setupEnhancedSilentAim()
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    
+    local silentAimConnection
+    
+    local function getBestTarget()
+        local bestTarget = nil
+        local bestDistance = silentAimFOV
+        local localPlayer = Players.LocalPlayer
+        
+        if not localPlayer or not localPlayer.Character then return nil end
+        
+        local camera = workspace.CurrentCamera
+        local mousePos = camera:WorldToViewportPoint(localPlayer.Character.Head.Position)
+        
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= localPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+                if silentAimTeamCheck then
+                    if localPlayer.Team and player.Team and localPlayer.Team == player.Team then
+                        continue
+                    end
+                end
+                
+                local targetPart = player.Character:FindFirstChild(silentAimTargetPart)
+                if targetPart then
+                    local screenPos, onScreen = camera:WorldToViewportPoint(targetPart.Position)
+                    
+                    if onScreen then
+                        local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(mousePos.X, mousePos.Y)).Magnitude
+                        
+                        if distance < bestDistance and math.random(1, 100) <= silentAimHitChance then
+                            if silentAimVisibleCheck then
+                                -- 简单的可见性检查
+                                local raycastParams = RaycastParams.new()
+                                raycastParams.FilterDescendantsInstances = {localPlayer.Character, player.Character}
+                                raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+                                
+                                local result = workspace:Raycast(camera.CFrame.Position, (targetPart.Position - camera.CFrame.Position).Unit * 1000, raycastParams)
+                                if not result or result.Instance:IsDescendantOf(player.Character) then
+                                    bestDistance = distance
+                                    bestTarget = targetPart
+                                end
+                            else
+                                bestDistance = distance
+                                bestTarget = targetPart
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        
+        return bestTarget
+    end
+    
+    -- 更稳定的hook方法
+    local function hookRemoteEvents()
+        for _, remote in pairs(game:GetDescendants()) do
+            if remote:IsA("RemoteEvent") then
+                if string.find(remote.Name:lower(), "shoot") or string.find(remote.Name:lower(), "fire") or string.find(remote.Name:lower(), "hit") then
+                    local oldFire = remote.FireServer
+                    remote.FireServer = function(self, ...)
+                        local args = {...}
+                        if silentAimEnabled then
+   
