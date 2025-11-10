@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YannCGStation Scripts Hub</title>
+    <!-- Particles.js CDN -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        /* Particles background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: #1a1a2e;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            color: #fff;
+        }
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #00f5d4, #7928ca);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .header p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        /* Discord link */
+        .discord-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 28px;
+            background: #5865f2;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .discord-link:hover {
+            background: #4752c4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
+        }
+        /* Script section */
+        .script-section {
+            margin-bottom: 80px;
+        }
+        .script-section h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            padding-left: 15px;
+            border-left: 4px solid #00f5d4;
+        }
+        .script-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .script-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: #00f5d4;
+        }
+        .script-card .script-desc {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        /* ScriptBlox link */
+        .script-blox-link {
+            display: inline-block;
+            padding: 10px 22px;
+            background: #7928ca;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-right: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .script-blox-link:hover {
+            background: #6721b6;
+            box-shadow: 0 4px 12px rgba(121, 40, 202, 0.3);
+        }
+        /* Code block */
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            overflow-x: auto;
+        }
+        .code-block code {
+            color: #f0f0f0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        /* Copy tip */
+        .copy-tip {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+        }
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.95rem;
+        }
+        .footer p {
+            margin-bottom: 10px;
+        }
+        .creator-name {
+            color: #00f5d4;
+            font-weight: 600;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            .script-card {
+                padding: 20px;
+            }
+            .script-card h3 {
+                font-size: 1.4rem;
+            }
+            .script-blox-link {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles background -->
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>YannCGStation Scripts Hub</h1>
+            <p>High-quality Roblox scripts designed for performance and reliability. All scripts are tested and verified for safety.</p>
+            <a href="https://discord.gg/vs5MAAKCe" target="_blank" class="discord-link">📢 Join Discord Community</a>
+        </header>
+
+        <!-- Scripts section -->
+        <section class="script-section">
+            <h2>Featured Scripts</h2>
+
+            <!-- Script 1: Universal Hitbox OP V3 -->
+            <div class="script-card">
+                <h3>YannCGStation Universal Hitbox OP V3</h3>
+                <p class="script-desc">
+                    A universal hitbox expansion script for Roblox games. Features include Silent Aim, Anti-Kick/Anti-Ban, Limb Control, ESP, and customizable FOV. Works on most Roblox titles with minimal configuration.
+                </p>
+                <a href="https://scriptblox.com/script/Universal-Script-YannCGStation-Universal-Hitbox-OP-V3-63952" target="_blank" class="script-blox-link">🔗 View on ScriptBlox</a>
+                
+                <div class="code-block">
+                    <span class="copy-tip">Long press/Right click to copy</span>
+                    <code>loadstring(game:HttpGet('https://raw.githubusercontent.com/YannCG/YannCGScript/refs/heads/main/YannCGStation%20Universal%20Hitbox%20V3'))()
+
+-- Create By YannCGStation</code>
+                </div>
+            </div>
+
+            <!-- Script 2 (Placeholder) -->
+            <div class="script-card">
+                <h3>Coming Soon</h3>
+                <p class="script-desc">
+                    Description for your second script will go here. This could be an auto farm script, infinite resources script, or anything else you've created.
+                </p>
+                <a href="#" class="script-blox-link">🔗 View on ScriptBlox</a>
+                
+                <div class="code-block">
+                    <span class="copy-tip">Long press/Right click to copy</span>
+                    <code>-- Your second script code will go here
+-- Create By YannCGStation</code>
+                </div>
+            </div>
+
+            <!-- Script 3 (Placeholder) -->
+            <div class="script-card">
+                <h3>Coming Soon</h3>
+                <p class="script-desc">
+                    Description for your third script will go here. This could be a GUI script, teleport script, or any other useful utility.
+                </p>
+                <a href="#" class="script-blox-link">🔗 View on ScriptBlox</a>
+                
+                <div class="code-block">
+                    <span class="copy-tip">Long press/Right click to copy</span>
+                    <code>-- Your third script code will go here
+-- Create By YannCGStation</code>
+                </div>
+            </div>
+
+            <!-- Script 4 (Placeholder) -->
+            <div class="script-card">
+                <h3>Coming Soon</h3>
+                <p class="script-desc">
+                    Description for your fourth script will go here. This could be a custom utility, game-specific script, or other advanced functionality.
+                </p>
+                <a href="#" class="script-blox-link">🔗 View on ScriptBlox</a>
+                
+                <div class="code-block">
+                    <span class="copy-tip">Long press/Right click to copy</span>
+                    <code>-- Your fourth script code will go here
+-- Create By YannCGStation</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 YannCGStation - All scripts are for educational purposes only</p>
+            <p>Community: <a href="https://discord.gg/vs5MAAKCe" target="_blank" style="color: #00f5d4;">YannCGStation Discord</a></p>
+        </footer>
+    </div>
+
+    <!-- Particles initialization -->
+    <script>
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#00f5d4"
+                },
+                "shape": {
+                    "type": "circle"
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true
+                },
+                "size": {
+                    "value": 3,
+                    "random": true
+            
