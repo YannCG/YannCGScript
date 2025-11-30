@@ -1,0 +1,182 @@
+local a=string.char
+local b="\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\100\119\121\108\47\101\110\103\108\105\115\104\45\119\111\114\100\115\47\114\101\102\115\47\104\101\97\100\115\47\109\97\115\116\101\114\47\119\111\114\100\115\46\116\120\116"
+
+local c,d,e={},{},{} local f=false local g,h=1,12 local i,j=1,48
+
+local function k()
+    if f then return end
+    local s,r=pcall(request,{Url=b,Method=a(71,69,84)})
+    if s and r and r.Body then
+        for w in r.Body:gmatch(a(91,94,13,10,93,43))do
+            local l=#w
+            if l>=g and l<=h and w:match(a(94,91,97,45,122,65,45,90,93,43,36))then
+                local v=w:lower()
+                table.insert(c,v)
+                local x=v:sub(1,1)
+                d[x]=d[x]or{}
+                table.insert(d[x],v)
+            end
+        end
+    end
+    f=true
+end
+spawn(k)
+
+local function l(m)
+    if not f then return {a(89,97,110,110,67,71,32,69,110,103,105,110,101,32,119,97,114,109,105,110,103,32,117,112,46,46,46),a(80,108,101,97,115,101,32,119,97,105,116)}end
+    m=m:lower()
+    local n=m.."_"..1500
+    if e[n]then return e[n]end
+    local o={}
+    local p=d[m:sub(1,1)]or c
+    for _,q in ipairs(p)do
+        if q:sub(1,#m)==m then
+            table.insert(o,q)
+            if #o>=1500 then break end
+        end
+    end
+    table.sort(o,function(r,s)return #r<#s end)
+    e[n]=o return o
+end
+
+local u=Instance.new(a(83,99,114,101,101,110,71,117,105))
+u.Name=a(89,97,110,110,67,71,95,70,111,114,103,101,88)
+u.Parent=game:GetService(a(67,111,114,101,71,117,105))
+u.ResetOnSpawn=false
+
+local v=Instance.new(a(70,114,97,109,101),u)
+v.Size=UDim2.new(0,354,0,588)
+v.Position=UDim2.new(0.5,-177,0.5,-294)
+v.BackgroundColor3=Color3.fromRGB(13,13,23)
+v.Active=true v.Draggable=true v.ClipsDescendants=true
+Instance.new(a(85,73,67,111,114,110,101,114),v).CornerRadius=UDim.new(0,22)
+local w=Instance.new(a(85,73,83,116,114,111,107,101),v)
+w.Thickness=2.6 w.Color=Color3.fromRGB(105,130,255) w.Transparency=0.5
+local x=Instance.new(a(85,73,71,114,97,100,105,101,110,116),v)
+x.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.fromRGB(30,30,52)),ColorSequenceKeypoint.new(1,Color3.fromRGB(10,10,22))} x.Rotation=135
+
+local y=Instance.new(a(84,101,120,116,76,97,98,101,108),v)
+y.Size=UDim2.new(1,0,0,58) y.BackgroundTransparency=1
+y.Text=a(87,111,114,100,70,111,114,103,101,32,88)
+y.TextColor3=Color3.fromRGB(115,135,255) y.Font=Enum.Font.GothamBlack y.TextSize=30 y.TextStrokeTransparency=0.7
+
+local z=Instance.new(a(84,101,120,116,76,97,98,101,108),v)
+z.Size=UDim2.new(1,0,0,22) z.Position=UDim2.new(0,0,0,50) z.BackgroundTransparency=1
+z.Text=a(98,121,32,89,97,110,110,67,71,83,116,97,116,105,111,110,32,226,128,162,32,50,48,50,53,32,85,108,116,105,109,97,116,101)
+z.TextColor3=Color3.fromRGB(160,160,200) z.TextSize=13
+
+local A=Instance.new(a(70,114,97,109,101),v)
+A.Size=UDim2.new(1,-36,0,76) A.Position=UDim2.new(0,18,0,76) A.BackgroundColor3=Color3.fromRGB(23,23,42)
+Instance.new(a(85,73,67,111,114,110,101,114),A).CornerRadius=UDim.new(0,16)
+
+local B=Instance.new(a(84,101,120,116,66,111,120),A)
+B.Size=UDim2.new(0.43,0,0,40) B.Position=UDim2.new(0.07,0,0.25,0)
+B.BackgroundColor3=Color3.fromRGB(38,38,68) B.PlaceholderText=a(77,105,110) B.Text="1"
+B.TextColor3=Color3.new(1,1,1) B.Font=Enum.Font.GothamSemibold B.TextSize=15
+Instance.new(a(85,73,67,111,114,110,101,114),B).CornerRadius=UDim.new(0,12)
+
+local C=Instance.new(a(84,101,120,116,66,111,120),A)
+C.Size=UDim2.new(0.43,0,0,40) C.Position=UDim2.new(0.5,0,0.25,0)
+C.BackgroundColor3=Color3.fromRGB(38,38,68) C.PlaceholderText=a(77,97,120) C.Text="12"
+C.TextColor3=Color3.new(1,1,1) C.Font=Enum.Font.GothamSemibold C.TextSize=15
+Instance.new(a(85,73,67,111,114,110,101,114),C).CornerRadius=UDim.new(0,12)
+
+local D=Instance.new(a(84,101,120,116,66,117,116,116,111,110),v)
+D.Size=UDim2.new(0,54,0,54) D.Position=UDim2.new(1,-72,0,128)
+D.BackgroundColor3=Color3.fromRGB(105,130,255) D.Text=a(82,101,108,111,97,100)
+D.TextColor3=Color3.new(1,1,1) D.Font=Enum.Font.GothamBold D.TextSize=13 D.AutoButtonColor=false D.ZIndex=10
+Instance.new(a(85,73,67,111,114,110,101,114),D).CornerRadius=UDim.new(1,0)
+local E=Instance.new(a(85,73,71,114,97,100,105,101,110,116),D)
+E.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.fromRGB(140,170,255)),ColorSequenceKeypoint.new(1,Color3.fromRGB(95,115,255))} E.Rotation=120
+D.MouseEnter:Connect(function()D:TweenSize(UDim2.new(0,60,0,60),a(79,117,116),a(81,117,105,110,116),0.18,true)end)
+D.MouseLeave:Connect(function()D:TweenSize(UDim2.new(0,54,0,54),a(79,117,116),a(81,117,105,110,116),0.18,true)end)
+
+local F=Instance.new(a(84,101,120,116,66,111,120),v)
+F.Size=UDim2.new(1,-36,0,50) F.Position=UDim2.new(0,18,0,166)
+F.BackgroundColor3=Color3.fromRGB(28,28,52) F.PlaceholderText=a(84,121,112,101,32,97,110,121,32,108,101,116,116,101,114,115,46,46,46)
+F.Text="" F.TextColor3=Color3.new(1,1,1) F.Font=Enum.Font.Gotham F.TextSize=18 F.ClearTextOnFocus=false
+Instance.new(a(85,73,67,111,114,110,101,114),F).CornerRadius=UDim.new(0,16)
+
+local G=Instance.new(a(83,99,114,111,108,108,105,110,103,70,114,97,109,101),v)
+G.Size=UDim2.new(1,-36,0,336) G.Position=UDim2.new(0,18,0,228)
+G.BackgroundTransparency=1 G.ScrollBarThickness=6 G.ScrollBarImageColor3=Color3.fromRGB(105,130,255) G.AutomaticCanvasSize=Enum.AutomaticSize.Y
+Instance.new(a(85,73,76,105,115,116,76,97,121,111,117,116),G).Padding=UDim.new(0,9)
+
+local H=Instance.new(a(70,114,97,109,101),v)
+H.Size=UDim2.new(1,-36,0,48) H.Position=UDim2.new(0,18,1,-58) H.BackgroundTransparency=1
+
+local I=Instance.new(a(84,101,120,116,66,117,116,116,111,110),H)
+I.Size=UDim2.new(0.42,0,1,0) I.BackgroundColor3=Color3.fromRGB(48,48,88) I.Text=a(80,114,101,118,105,111,117,115)
+I.TextColor3=Color3.new(1,1,1) I.Font=Enum.Font.GothamSemibold
+Instance.new(a(85,73,67,111,114,110,101,114),I).CornerRadius=UDim.new(0,13)
+
+local J=Instance.new(a(84,101,120,116,76,97,98,101,108),H)
+J.Size=UDim2.new(0.16,0,1,0) J.Position=UDim2.new(0.42,0,0,0) J.BackgroundTransparency=1
+J.Text=a(80,97,103,101,32,49) J.TextColor3=Color3.fromRGB(150,190,255) J.Font=Enum.Font.GothamBold J.TextSize=16
+
+local K=Instance.new(a(84,101,120,116,66,117,116,116,111,110),H)
+K.Size=UDim2.new(0.42,0,1,0) K.Position=UDim2.new(0.58,0,0,0)
+K.BackgroundColor3=Color3.fromRGB(48,48,88) K.Text=a(78,101,120,116)
+K.TextColor3=Color3.new(1,1,1) K.Font=Enum.Font.GothamSemibold
+Instance.new(a(85,73,67,111,114,110,101,114),K).CornerRadius=UDim.new(0,13)
+
+local L=Instance.new(a(84,101,120,116,76,97,98,101,108),v)
+L.Size=UDim2.new(1,-36,0,24) L.Position=UDim2.new(0,18,1,-24) L.BackgroundTransparency=1
+L.Text=a(89,97,110,110,67,71,32,69,110,103,105,110,101,32,105,110,105,116,105,97,108,105,122,105,110,103,46,46,46)
+L.TextColor3=Color3.fromRGB(130,255,170) L.TextSize=12
+
+local function M()
+    for _,N in G:GetChildren()do
+        if N:IsA(a(84,101,120,116,66,117,116,116,111,110))or N:IsA(a(84,101,120,116,76,97,98,101,108))then N:Destroy()end
+    end
+end
+
+local function O()
+    M()
+    if #F.Text<1 then return end
+    local P=l(F.Text)
+    if #P==0 then
+        local Q=Instance.new(a(84,101,120,116,76,97,98,101,108),G)
+        Q.Size=UDim2.new(1,0,0,38) Q.BackgroundTransparency=1
+        Q.Text=a(78,111,32,119,111,114,100,115,32,102,111,117,110,100)
+        Q.TextColor3=Color3.fromRGB(255,130,130)
+        return
+    end
+    local R=math.ceil(#P/j) i=math.clamp(i,1,R) J.Text=a(80,97,103,101,32)..i
+    I.Visible=i>1 K.Visible=i<R
+    for S=(i-1)*j+1,math.min(i*j,#P)do
+        local T=Instance.new(a(84,101,120,116,66,117,116,116,111,110),G)
+        T.Size=UDim2.new(1,0,0,40) T.BackgroundColor3=Color3.fromRGB(40,40,78)
+        T.Text=P[S] T.TextColor3=Color3.fromRGB(205,225,255)
+        T.Font=Enum.Font.GothamMedium T.TextSize=15
+        Instance.new(a(85,73,67,111,114,110,101,114),T).CornerRadius=UDim.new(0,12)
+        T.MouseButton1Click:Connect(function()F.Text=P[S]end)
+    end
+end
+
+D.MouseButton1Click:Connect(function()
+    local U=tonumber(B.Text)or 1 local V=tonumber(C.Text)or 12
+    g=math.clamp(U,1,20) h=math.clamp(V,g,30)
+    c,d,e,f={},{},{},false i=1
+    L.Text=a(82,101,98,117,105,108,100,105,110,103,32,100,97,116,97,98,97,115,101,46,46,46) L.Visible=true M()
+    spawn(function()
+        k()
+        while not f do task.wait()end
+        L.Text=a(87,111,114,100,70,111,114,103,101,32,88,32,82,101,97,100,121,32,226,128,162,32)..string.format(a(37,44,100),#c)..a(32,119,111,114,100,115)
+        task.wait(3) L.Visible=false
+        if #F.Text>0 then O()end
+    end)
+end)
+
+I.MouseButton1Click:Connect(function()if i>1 then i=i-1 O()end end)
+K.MouseButton1Click:Connect(function()i=i+1 O()end)
+
+F:GetPropertyChangedSignal(a(84,101,120,116)):Connect(function()i=1 task.wait(0.1)O()end)
+
+spawn(function()
+    while not f do task.wait()end
+    L.Text=a(87,111,114,100,70,111,114,103,101,32,88,32,82,101,97,100,121,32,226,128,162,32)..string.format(a(37,44,100),#c)..a(32,119,111,114,100,115,32,108,111,97,100,101,100)
+    task.wait(4) L.Visible=false
+end)
+
+print(a(87,111,114,100,70,111,114,103,101,32,88,32,85,108,116,105,109,97,116,101,32,69,100,105,116,105,111,110,32,108,111,97,100,101,100,32,226,128,148,32,98,121,32,89,97,110,110,67,71,83,116,97,116,105,111,110))
