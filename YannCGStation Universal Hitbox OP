@@ -1,0 +1,557 @@
+local L_1_ = game
+local L_2_ = L_1_.GetService
+local L_3_ = L_2_(L_1_, "Players")
+local L_4_ = L_3_.LocalPlayer
+local L_5_ = getgenv()
+
+L_5_.le = L_5_.le or loadstring(L_1_.HttpGet(L_1_, 'https://raw.githubusercontent.com/AAPVdev/scripts/refs/heads/main/LimbExtender.lua'))()
+
+local L_6_ = L_5_.le
+local L_7_ = L_6_({LISTEN_FOR_INPUT = false, USE_HIGHLIGHT = false})
+
+local L_8_ = loadstring(L_1_.HttpGet(L_1_, 'https://sirius.menu/rayfield'))()
+local L_9_ = {}
+
+-- 新增：Silent Aim 变量
+local silentAimEnabled = false
+local silentAimFOV = 100
+local silentAimTeamCheck = true
+local silentAimVisibleCheck = true
+local silentAimHitChance = 100
+local silentAimTargetPart = "Head"
+
+local L_10_ = {
+    "YannCG Hitbox System 🎯",
+    "Advanced Limb Control ✅", 
+    "YannCG Premium Loaded 💎",
+    "Combat Enhanced 🚀",
+    "Silent Aim Activated 🔫"
+}
+
+local L_11_ = L_10_[math.random(1, #L_10_)]
+
+local L_12_ = L_8_:CreateWindow({
+    Name = "YannCG Hitbox",
+    LoadingTitle = "YannCG Hitbox", 
+    LoadingSubtitle = L_11_,
+    Theme = "Default",
+    DisableRayfieldPrompts = true,
+    ConfigurationSaving = {Enabled = true, FolderName = "YannCGConfigs", FileName = "HitboxConfig"}
+})
+
+local L_13_ = L_12_:CreateTab("Hitbox", "scale-3d")
+local L_14_ = L_12_:CreateTab("Esp", "eye") 
+local L_15_ = L_12_:CreateTab("Target", "crosshair")
+local L_16_ = L_12_:CreateTab("Themes", "palette")
+local L_92_ = L_12_:CreateTab("Community", "users")
+local L_93_ = L_12_:CreateTab("Silent Aim (no working", "target") -- 保留Silent Aim标签
+
+-- 社区标签页
+L_92_:CreateSection("Join Our Community")
+
+L_92_:CreateButton({
+    Name = "📢 Join Discord Server",
+    Callback = function()
+        L_1_.StarterGui:SetCore("SendNotification", {
+            Title = "YannCG Discord",
+            Text = "Discord link copied to clipboard!",
+            Duration = 5
+        })
+        
+        pcall(function()
+            setclipboard("https://discord.gg/t6TMHwqt")
+        end)
+        
+        print("🎮 Join YannCG Discord: https://discord.gg/t6TMHwqt")
+    end,
+})
+
+L_92_:CreateLabel("Get support, updates, and more scripts!")
+L_92_:CreateLabel("Link copied to clipboard when clicked")
+
+-- Silent Aim 功能
+L_93_:CreateSection("Silent Aim Configuration")
+
+L_93_:CreateToggle({
+    Name = "🔫 Enable Silent Aim",
+    CurrentValue = false,
+    Flag = "SilentAimEnabled",
+    Callback = function(Value)
+        silentAimEnabled = Value
+        if Value then
+            L_8_:Notify({
+                Title = "Silent Aim",
+                Content = "Silent Aim Activated!",
+                Duration = 3
+            })
+        end
+    end
+})
+
+L_93_:CreateSlider({
+    Name = "🎯 Silent Aim FOV",
+    Range = {10, 500},
+    Increment = 5,
+    Suffix = "FOV",
+    CurrentValue = 100,
+    Flag = "SilentAimFOV",
+    Callback = function(Value)
+        silentAimFOV = Value
+    end
+})
+
+L_93_:CreateSlider({
+    Name = "🎲 Hit Chance",
+    Range = {0, 100},
+    Increment = 1,
+    Suffix = "%",
+    CurrentValue = 100,
+    Flag = "SilentAimHitChance",
+    Callback = function(Value)
+        silentAimHitChance = Value
+    end
+})
+
+L_93_:CreateToggle({
+    Name = "👥 Team Check",
+    CurrentValue = true,
+    Flag = "SilentAimTeamCheck",
+    Callback = function(Value)
+        silentAimTeamCheck = Value
+    end
+})
+
+L_93_:CreateToggle({
+    Name = "👀 Visible Check",
+    CurrentValue = true,
+    Flag = "SilentAimVisibleCheck",
+    Callback = function(Value)
+        silentAimVisibleCheck = Value
+    end
+})
+
+L_93_:CreateDropdown({
+    Name = "🎯 Target Part",
+    Options = {"Head", "HumanoidRootPart", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
+    CurrentOption = {"Head"},
+    Flag = "SilentAimTargetPart",
+    Callback = function(Value)
+        silentAimTargetPart = Value[1]
+    end
+})
+
+L_93_:CreateButton({
+    Name = "⚡ Test Silent Aim",
+    Callback = function()
+        L_8_:Notify({
+            Title = "Silent Aim Test",
+            Content = "Silent Aim system is working!",
+            Duration = 3
+        })
+    end
+})
+
+-- Silent Aim 核心功能
+local function setupSilentAim()
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local UserInputService = game:GetService("UserInputService")
+    
+    -- 获取鼠标位置
+    local function getMousePosition()
+        return UserInputService:GetMouseLocation()
+    end
+    
+    -- 检查是否在团队中
+    local function isEnemy(player)
+        if not silentAimTeamCheck then return true end
+        
+        local localPlayer = Players.LocalPlayer
+        if localPlayer.Team and player.Team then
+            return localPlayer.Team ~= player.Team
+        end
+        
+        return true
+    end
+    
+    -- 检查是否可见
+    local function isVisible(target, origin)
+        if not silentAimVisibleCheck then return true end
+        
+        local params = RaycastParams.new()
+        params.FilterDescendantsInstances = {Players.LocalPlayer.Character, target.Parent}
+        params.FilterType = Enum.RaycastFilterType.Blacklist
+        
+        local result = workspace:Raycast(origin, target.Position - origin, params)
+        return result == nil or result.Instance:IsDescendantOf(target.Parent)
+    end
+    
+    -- 获取最佳目标
+    local function getBestTarget()
+        local bestTarget = nil
+        local bestDistance = silentAimFOV
+        local mousePos = getMousePosition()
+        
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild(silentAimTargetPart) then
+                if isEnemy(player) then
+                    local targetPart = player.Character:FindFirstChild(silentAimTargetPart)
+                    if targetPart and isVisible(targetPart, Players.LocalPlayer.Character.Head.Position) then
+                        local screenPos, onScreen = workspace.CurrentCamera:WorldToViewportPoint(targetPart.Position)
+                        
+                        if onScreen then
+                            local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                            
+                            if distance < bestDistance and math.random(1, 100) <= silentAimHitChance then
+                                bestDistance = distance
+                                bestTarget = targetPart
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        
+        return bestTarget
+    end
+    
+    -- Hook __namecall 方法进行 Silent Aim
+    local mt = getrawmetatable(game)
+    local oldNamecall = mt.__namecall
+    
+    if setreadonly then setreadonly(mt, false) end
+    
+    mt.__namecall = newcclosure(function(...)
+        local method = getnamecallmethod()
+        local args = {...}
+        
+        if silentAimEnabled and method == "FireServer" then
+            local remoteName = tostring(args[1])
+            
+            -- 检测射击相关的远程事件
+            if string.find(remoteName:lower(), "shoot") or 
+               string.find(remoteName:lower(), "fire") or 
+               string.find(remoteName:lower(), "hit") then
+                
+                local target = getBestTarget()
+                if target then
+                    -- 修改射击参数以瞄准目标
+                    if args[2] then
+                        if typeof(args[2]) == "Vector3" then
+                            args[2] = target.Position
+                        elseif typeof(args[2]) == "CFrame" then
+                            args[2] = CFrame.new(args[2].Position, target.Position)
+                        end
+                    end
+                end
+            end
+        end
+        
+        return oldNamecall(unpack(args))
+    end)
+    
+    if setreadonly then setreadonly(mt, true) end
+end
+
+-- 原有的功能代码保持不变...
+local function L_17_(L_18_arg1)
+    local L_19_ = 'Create' .. L_18_arg1.method
+    local L_20_ = L_18_arg1.tab[L_19_]
+    if type(L_20_) == 'function' then
+        L_20_(L_18_arg1.tab, {
+            Name = L_18_arg1.name,
+            SectionParent = L_18_arg1.section, 
+            CurrentValue = L_18_arg1.value,
+            Flag = L_18_arg1.flag,
+            Options = L_18_arg1.options,
+            CurrentOption = L_18_arg1.currentOption,
+            MultipleOptions = L_18_arg1.multipleOptions,
+            Range = L_18_arg1.range,
+            Color = L_18_arg1.color,
+            Increment = L_18_arg1.increment,
+            Callback = function(L_21_arg1)
+                if L_18_arg1.multipleOptions == false then
+                    L_21_arg1 = L_21_arg1[1]
+                end
+                L_7_:Set(L_18_arg1.flag, L_21_arg1)
+            end
+        })
+    end
+end
+
+local L_22_ = L_13_:CreateToggle({
+    Name = "Modify Hitbox",
+    CurrentValue = false,
+    Flag = "ModifyHitbox", 
+    Callback = function(L_23_arg1)
+        L_7_:Toggle(L_23_arg1)
+    end
+})
+
+L_13_:CreateDivider()
+
+local L_24_ = {
+    {method = "Toggle", name = "Team Check", flag = "TEAM_CHECK", tab = L_13_, value = L_7_:Get("TEAM_CHECK")},
+    {method = "Toggle", name = "ForceField Check", flag = "FORCEFIELD_CHECK", tab = L_13_, value = L_7_:Get("FORCEFIELD_CHECK")},
+    {method = "Toggle", name = "Hitbox Collisions", flag = "HITBOX_CAN_COLLIDE", tab = L_13_, value = L_7_:Get("LIMB_CAN_COLLIDE")},
+    {method = "Slider", name = "Hitbox Transparency", flag = "HITBOX_TRANSPARENCY", tab = L_13_, range = {0, 1}, increment = 0.1, value = L_7_:Get("LIMB_TRANSPARENCY")},
+    {method = "Slider", name = "Hitbox Size", flag = "HITBOX_SIZE", tab = L_13_, range = {1, 50}, increment = 0.5, value = L_7_:Get("LIMB_SIZE")}
+}
+
+for L_25_forvar0, L_26_forvar1 in pairs(L_24_) do
+    L_17_(L_26_forvar1)
+    if L_25_forvar0 == 3 or L_25_forvar0 == 5 then
+        L_26_forvar1.tab:CreateDivider()
+    end
+end
+
+L_13_:CreateKeybind({
+    Name = "Toggle Keybind",
+    CurrentKeybind = L_7_:Get("TOGGLE"),
+    Flag = "ToggleKeybind",
+    Callback = function()
+        L_22_:Set(not L_7_._running)
+    end
+})
+
+local L_27_ = L_15_:CreateDropdown({
+    Name = "Target Limb", 
+    Options = {},
+    CurrentOption = {L_7_:Get("TARGET_LIMB")},
+    Flag = "TARGET_LIMB",
+    Callback = function(L_28_arg1)
+        L_7_:Set("TARGET_LIMB", L_28_arg1[1])
+    end
+})
+
+L_16_:CreateDropdown({
+    Name = "Current Theme",
+    Options = {"Default", "AmberGlow", "Amethyst", "Bloom", "DarkBlue", "Green", "Light", "Ocean", "Serenity"},
+    CurrentOption = {"Default"},
+    Flag = "CurrentTheme", 
+    Callback = function(L_29_arg1)
+        L_12_.ModifyTheme(L_29_arg1[1])
+    end
+})
+
+-- Sense ESP
+local L_30_ = loadstring(L_1_.HttpGet(L_1_, 'https://sirius.menu/sense'))()
+L_30_.teamSettings.enemy.enabled = true
+L_30_.teamSettings.friendly.enabled = true
+
+local function L_31_(L_32_arg1, L_33_arg1)
+    L_30_.teamSettings.enemy[L_32_arg1] = L_33_arg1
+    L_30_.teamSettings.friendly[L_32_arg1] = L_33_arg1
+end
+
+local function L_34_(L_35_arg1)
+    if not L_35_arg1 or not L_35_arg1.type then return end
+
+    local function L_36_(L_37_arg1)
+        if not L_35_arg1.props then return end
+        local function L_38_(L_39_arg1)
+            if L_35_arg1.alpha ~= nil then return {L_39_arg1, L_35_arg1.alpha} end
+            return L_39_arg1
+        end
+        if L_35_arg1.props.friendly then
+            local L_40_ = L_30_.teamSettings.friendly
+            for L_41_forvar0, L_42_forvar1 in ipairs(L_35_arg1.props.friendly) do
+                L_40_[L_42_forvar1] = (L_35_arg1.type == "color") and L_38_(L_37_arg1) or L_37_arg1
+            end
+        end
+        if L_35_arg1.props.enemy then
+            local L_43_ = L_30_.teamSettings.enemy
+            for L_44_forvar0, L_45_forvar1 in ipairs(L_35_arg1.props.enemy) do
+                L_43_[L_45_forvar1] = (L_35_arg1.type == "color") and L_38_(L_37_arg1) or L_37_arg1
+            end
+        end
+    end
+
+    local function L_46_(L_47_arg1)
+        if L_35_arg1.setting then
+            L_31_(L_35_arg1.setting, L_47_arg1)
+        end
+        L_36_(L_47_arg1)
+        if L_35_arg1.onChange then L_35_arg1.onChange(L_47_arg1) end
+    end
+
+    if L_35_arg1.type == "section" then
+        L_14_:CreateSection(L_35_arg1.name or "")
+        return
+    end
+
+    if L_35_arg1.type == "label" then
+        L_14_:CreateLabel(L_35_arg1.name or "")
+        return
+    end
+
+    if L_35_arg1.type == "toggle" then
+        return L_14_:CreateToggle({
+            Name = L_35_arg1.name,
+            CurrentValue = L_35_arg1.default or false,
+            Flag = L_35_arg1.flag or "",
+            Callback = L_46_
+        })
+    end
+
+    if L_35_arg1.type == "color" then
+        return L_14_:CreateColorPicker({
+            Name = L_35_arg1.name,
+            Color = L_35_arg1.color or Color3.fromRGB(255,255,255),
+            Flag = L_35_arg1.flag or "",
+            Callback = L_46_
+        })
+    end
+
+    if L_35_arg1.type == "dropdown" then
+        return L_14_:CreateDropdown({
+            Name = L_35_arg1.name,
+            Options = L_35_arg1.options or {},
+            CurrentOption = L_35_arg1.current,
+            Flag = L_35_arg1.flag or "",
+            Callback = L_46_
+        })
+    end
+
+    if L_35_arg1.type == "slider" then
+        return L_14_:CreateSlider({
+            Name = L_35_arg1.name,
+            Range = L_35_arg1.range or {0,100},
+            CurrentValue = (L_35_arg1.default ~= nil and L_35_arg1.default) or ((L_35_arg1.range and L_35_arg1.range[1]) or 0),
+            Increment = L_35_arg1.increment or 1,
+            Suffix = L_35_arg1.suffix or "",
+            Flag = L_35_arg1.flag or "",
+            Callback = L_46_
+        })
+    end
+end
+
+local function L_48_(L_49_arg1, L_50_arg1, L_51_arg1, L_52_arg1, L_53_arg1)
+    return {
+        type = "color",
+        name = L_49_arg1,
+        flag = L_50_arg1,
+        color = L_52_arg1,
+        alpha = L_53_arg1 or 1,
+        props = {friendly = L_51_arg1, enemy = L_51_arg1}
+    }
+end
+
+local function L_54_(L_55_arg1, L_56_arg1, L_57_arg1, L_58_arg1, L_59_arg1)
+    return {
+        type = "color", 
+        name = L_55_arg1,
+        flag = L_56_arg1,
+        color = L_58_arg1,
+        alpha = L_59_arg1 or 1,
+        props = {friendly = L_57_arg1}
+    }
+end
+
+local function L_60_(L_61_arg1, L_62_arg1, L_63_arg1, L_64_arg1, L_65_arg1)
+    return {
+        type = "color",
+        name = L_61_arg1, 
+        flag = L_62_arg1,
+        color = L_64_arg1,
+        alpha = L_65_arg1 or 1,
+        props = {enemy = L_63_arg1}
+    }
+end
+
+local function L_66_(L_67_arg1, L_68_arg1, L_69_arg1, L_70_arg1)
+    return {type = "toggle", name = L_67_arg1, flag = L_68_arg1, setting = L_69_arg1, default = L_70_arg1}
+end
+
+local function L_71_(L_72_arg1, L_73_arg1, L_74_arg1, L_75_arg1, L_76_arg1, L_77_arg1)
+    return {type = "slider", name = L_72_arg1, flag = L_73_arg1, range = L_74_arg1, default = L_75_arg1, increment = L_76_arg1, setting = L_77_arg1}
+end
+
+local L_78_ = {
+    L_66_("Hide Team", "HideTeam", nil, false),
+    L_48_("Team Color", "TeamColor", {"boxColor","box3dColor","offScreenArrowColor","tracerColor"}, Color3.fromRGB(0,255,0), 1),
+    L_48_("Enemy Color", "EnemyColor", {"boxColor","box3dColor","offScreenArrowColor","tracerColor"}, Color3.fromRGB(255,0,0), 1),
+    {type = "section", name = "Box"},
+    L_66_("Enabled", "Boxes", "box", false),
+    L_66_("Outline", "BoxesOutlined", "boxOutline", true),
+    L_66_("Fill", "BoxesFilled", "boxFill", false),
+    L_54_("Team Fill Color", "TeamFillColor", {"boxFillColor"}, Color3.fromRGB(0,255,0), 0.5),
+    L_60_("Enemy Fill Color", "EnemyFillColor", {"boxFillColor"}, Color3.fromRGB(255,0,0), 0.5),
+    L_66_("3D Boxes", "3DBoxes", "box3d", false),
+    {type = "section", name = "Health"},
+    L_66_("Enabled", "HealthBar", "healthBar", false),
+    {type = "color", name = "Health Color", flag = "HealthColor", color = Color3.fromRGB(0,255,0), onChange = function(L_79_arg1) L_31_("healthyColor", L_79_arg1) end},
+    {type = "color", name = "Dying Color", flag = "DyingColor", color = Color3.fromRGB(255,0,0), onChange = function(L_80_arg1) L_31_("dyingColor", L_80_arg1) end},
+    L_66_("Outline", "HBsOutlined", "healthBarOutline", true),
+    {type = "section", name = "Tracer"},
+    L_66_("Enabled", "Tracers", "tracer", false),
+    L_66_("Outline", "TracersOutlined", "tracerOutline", true),
+    {type = "dropdown", name = "Origin", flag = "TracerOrigin", options = {"Bottom","Top","Mouse"}, current = "Bottom", onChange = function(L_81_arg1) L_31_("tracerOrigin", L_81_arg1) end},
+    {type = "section", name = "Tag"},
+    L_66_("Name", "Names", "name", false),
+    L_66_("Name Outlined", "NamesOutlined", "nameOutline", true),
+    L_66_("Distance", "Distances", "distance", false),
+    L_66_("Distance Outlined", "DistancesOutlined", "distanceOutline", true),
+    L_66_("Health", "Health", "healthText", false),
+    L_66_("Health Outlined", "HealthsOutlined", "healthOutline", true),
+    {type = "section", name = "Chams"},
+    L_66_("Enabled", "Chams", "chams", false),
+    L_66_("Visible Only", "ChamsVisOnly", "chamsVisibleOnly", false),
+    L_54_("Team Fill Color", "TeamFillColorChams", {"chamsFillColor"}, Color3.new(0.2,0.2,0.2), 0.5),
+    L_54_("Team Outline Color", "TeamOutlineColorChams", {"chamsOutlineColor"}, Color3.new(0,1,0), 0),
+    L_60_("Enemy Fill Color", "EnemyFillColorChams", {"chamsFillColor"}, Color3.new(0.2,0.2,0.2), 0.5),
+    L_60_("Enemy Outline Color", "EnemyOutlineColorChams", {"chamsOutlineColor"}, Color3.new(1,0,0), 0),
+    {type = "section", name = "Off Screen Arrow"},
+    L_66_("Enabled", "OSA", "offScreenArrow", false),
+    L_71_("Size", "OSASize", {15,50}, 15, 1, "offScreenArrowSize"),
+    L_71_("Radius", "OSARadius", {150,360}, 150, 1, "offScreenArrowRadius"),
+    L_66_("Outline", "OSAOutlined", "offScreenArrowOutline", true),
+    {type = "section", name = "Weapon"},
+    L_66_("Enabled", "Weapons", "weapon", false),
+    L_66_("Outline", "WeaponOutlined", "weaponOutline", true)
+}
+
+for L_82_forvar0, L_83_forvar1 in ipairs(L_78_) do
+    L_34_(L_83_forvar1)
+end
+
+L_30_.Load()
+L_8_:LoadConfiguration()
+
+local function L_84_(L_85_arg1)
+    local function L_86_(L_87_arg1)
+        if not L_87_arg1:IsA("BasePart") then return end
+        local L_88_ = table.find(L_9_, L_87_arg1.Name)
+        if not L_88_ then
+            table.insert(L_9_, L_87_arg1.Name)
+            table.sort(L_9_)
+            L_27_:Refresh(L_9_)
+        end
+    end
+
+    L_85_arg1.ChildAdded:Connect(function(L_89_arg1)
+        L_86_(L_89_arg1)
+    end)
+
+    for L_90_forvar0, L_91_forvar1 in ipairs(L_85_arg1:GetChildren()) do
+        L_86_(L_91_forvar1)
+    end
+end
+
+L_4_.CharacterAdded:Connect(L_84_)
+if L_4_.Character then
+    L_84_(L_4_.Character)
+end
+
+-- 初始化 Silent Aim 系统
+setupSilentAim()
+
+L_8_:Notify({
+    Title = "YannCG System Loaded",
+    Content = "Silent Aim Activated!",
+    Duration = 6
+})
+
+print("🎯 YannCG Hitbox System Fully Loaded!")
+print("🔫 Silent Aim: Ready")
+print("📢 Discord: https://discord.gg/t6TMHwqt")
